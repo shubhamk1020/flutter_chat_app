@@ -4,7 +4,11 @@ import 'package:flutter_chat_app/Pages/call_page.dart';
 import 'package:flutter_chat_app/Pages/contact_page.dart';
 import 'package:flutter_chat_app/Pages/message_page.dart';
 import 'package:flutter_chat_app/Pages/notification_page.dart';
+import 'package:flutter_chat_app/helpers.dart';
 import 'package:flutter_chat_app/theme.dart';
+
+import 'package:flutter_chat_app/widgets/icon_background.dart';
+import 'package:flutter_chat_app/widgets/widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ValueNotifier<int> pageIndex = ValueNotifier(0);
+  final ValueNotifier<String> title = ValueNotifier('Message');
   final pages = const [
     MessagePage(),
     NotificationPage(),
@@ -22,9 +27,48 @@ class _HomeScreenState extends State<HomeScreen> {
     ContactPage(),
   ];
 
+  final pageTitles = const ['Message', 'Notification', 'Calls', 'Contacts'];
+  void _onNavigationBar(val) {
+    title.value = pageTitles[val];
+    pageIndex.value = val;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: ValueListenableBuilder(
+          valueListenable: title,
+          builder: (context, value, child) {
+            return Text(
+              value,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+        leadingWidth: 54,
+        leading: Align(
+          alignment: Alignment.centerRight,
+          child: IconBackground(
+              icon: Icons.search,
+              onTap: () {
+                print('Todo search');
+              }),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 24.0),
+            child: Avatar.small(
+              url: Helpers.randomPictureUrl(),
+            ),
+          )
+        ],
+      ),
       body: ValueListenableBuilder(
         valueListenable: pageIndex,
         builder: (context, value, child) {
@@ -32,9 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       bottomNavigationBar: _BottomNavigationBar(
-        onItemSelected: (val) {
-          pageIndex.value = val;
-        },
+        onItemSelected: _onNavigationBar,
       ),
     );
   }
@@ -43,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class _BottomNavigationBar extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
 
-  const _BottomNavigationBar({super.key, required this.onItemSelected});
+  const _BottomNavigationBar({required this.onItemSelected});
 
   @override
   State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
@@ -105,8 +147,7 @@ class _NavigationBarItem extends StatelessWidget {
   final bool isSelected;
 
   const _NavigationBarItem(
-      {super.key,
-      required this.index,
+      {required this.index,
       required this.label,
       required this.icon,
       required this.onTap,
