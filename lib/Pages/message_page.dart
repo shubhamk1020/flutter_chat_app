@@ -19,21 +19,22 @@ class MessagePage extends StatelessWidget {
 }
 
 class _Stories extends StatelessWidget {
-  const _Stories({super.key});
+  const _Stories();
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 8,
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(0),
       child: SizedBox(
         height: 134,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          //  crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 10.0),
+              padding: EdgeInsets.only(top: 10.0, left: 10, bottom: 5),
               child: Text(
                 'Stories',
                 style: TextStyle(
@@ -46,10 +47,13 @@ class _Stories extends StatelessWidget {
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
-                    return _StroyCard(
-                        storyData: StoryData(
-                            url: Helpers.randomPictureUrl(),
-                            name: faker.person.name()));
+                    return SizedBox(
+                      width: 70,
+                      child: _StroyCard(
+                          storyData: StoryData(
+                              url: Helpers.randomPictureUrl(),
+                              name: faker.person.name())),
+                    );
                   }),
             )
           ],
@@ -62,24 +66,24 @@ class _Stories extends StatelessWidget {
 class _StroyCard extends StatelessWidget {
   final StoryData storyData;
 
-  const _StroyCard({super.key, required this.storyData});
+  const _StroyCard({required this.storyData});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      // crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 12.0, left: 3),
           child: Avatar.medius(
             url: storyData.url,
           ),
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(top: 16, left: 16.5),
             child: Text(
               storyData.name,
               overflow: TextOverflow.ellipsis,
