@@ -6,8 +6,6 @@ import 'package:flutter_chat_app/Pages/message_page.dart';
 import 'package:flutter_chat_app/Pages/notification_page.dart';
 import 'package:flutter_chat_app/helpers.dart';
 import 'package:flutter_chat_app/theme.dart';
-
-import 'package:flutter_chat_app/widgets/icon_background.dart';
 import 'package:flutter_chat_app/widgets/widget.dart';
 
 class HomeScreen extends StatefulWidget {

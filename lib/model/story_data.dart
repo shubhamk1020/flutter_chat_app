@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
+@immutable
 class StoryData {
   final String url;
   final String name;
 
-  @immutable
-  StoryData({required this.url, required this.name});
+  const StoryData({required this.url, required this.name});
 }
