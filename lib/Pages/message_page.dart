@@ -1,8 +1,10 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/Screens/screens.dart';
 import 'package:flutter_chat_app/helpers.dart';
 import 'package:flutter_chat_app/theme.dart';
 import 'package:flutter_chat_app/widgets/widget.dart';
+import 'package:jiffy/jiffy.dart';
 
 import '../model/models.dart';
 
@@ -11,9 +13,104 @@ class MessagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(8),
-      child: _Stories(),
+    return CustomScrollView(
+      slivers: [
+         const SliverToBoxAdapter(
+          child: _Stories(),
+        ),
+        SliverList(
+          delegate:
+              SliverChildBuilderDelegate(_delegate),
+              
+        ),
+      ],
+    );
+  }
+
+  Widget _delegate(BuildContext context, int index) {
+    final Faker faker = Faker();
+    final date = Helpers.randomDate();
+            return _MessageTile(messageData: MessageData(senderName: faker.person.name(),
+             message: faker.lorem.sentence(), 
+             messageDate: date, 
+             dateMessage: Jiffy(date).fromNow(),
+              profilePic: Helpers.randomPictureUrl()));
+         }
+}
+class _MessageTile extends StatelessWidget {
+
+  final MessageData messageData;
+  const _MessageTile({super.key, required this.messageData});
+  
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(ChatScreen.route(messageData));
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        height: 90,
+        
+        decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
+         child: Padding(
+           padding: const EdgeInsets.all(4.0),
+           child: Row(
+            children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Avatar.medius(url: messageData.profilePic,),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 
+                  Text(messageData.senderName, 
+                  overflow: TextOverflow.ellipsis, 
+                  style: const TextStyle(letterSpacing: 0.5,
+                   wordSpacing: 1.5, fontSize: 14, 
+                   ),),
+                   const SizedBox(height: 6,),
+                  
+                  Text(messageData.message,  overflow: TextOverflow.ellipsis, 
+                  style: const TextStyle(
+                  fontSize: 12, 
+                   color: AppColors.textFaded),),
+                ],
+              ),
+            ),
+    
+    
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(messageData.dateMessage.toLowerCase(), style: const TextStyle(fontSize: 10,
+                  fontWeight: FontWeight.w400, 
+                  letterSpacing: -0.2 ),),
+                  const SizedBox(height: 8,),
+                  Container(
+                    height: 18,
+                    width: 18,
+                    decoration: const BoxDecoration(shape: BoxShape.circle,
+                     color: AppColors.secondary,),
+    
+                     child: const Center(child: Text('1', style: TextStyle(fontSize: 10, color: AppColors.textLight, fontWeight: FontWeight.w900),)),
+                  ),
+    
+                ],
+              ),
+            )
+    
+        ],
+            
+        ),
+         ),
+      ),
     );
   }
 }

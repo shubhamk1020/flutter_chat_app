@@ -6,6 +6,7 @@ import 'package:flutter_chat_app/Pages/message_page.dart';
 import 'package:flutter_chat_app/Pages/notification_page.dart';
 import 'package:flutter_chat_app/helpers.dart';
 import 'package:flutter_chat_app/theme.dart';
+import 'package:flutter_chat_app/widgets/glowing_action_button.dart';
 import 'package:flutter_chat_app/widgets/widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: Theme.of(context).iconTheme,
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: ValueListenableBuilder(
@@ -101,39 +103,53 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        top: false,
-        bottom: true,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _NavigationBarItem(
-              index: 0,
-              label: "Message",
-              icon: CupertinoIcons.bubble_left_bubble_right_fill,
-              isSelected: (selectedIndex == 0),
-              onTap: handleItemSelected,
+    final brightness = Theme.of(context).brightness;
+    return Card(
+      color: (brightness == Brightness.light) ? Colors.white : null,
+      margin: const EdgeInsets.all(0),
+      child: SafeArea(
+          top: false,
+          bottom: true,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 12, left: 8.0, right: 8,bottom: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _NavigationBarItem(
+                  index: 0,
+                  label: "Message",
+                  icon: CupertinoIcons.bubble_left_bubble_right_fill,
+                  isSelected: (selectedIndex == 0),
+                  onTap: handleItemSelected,
+                ),
+                _NavigationBarItem(
+                    index: 1,
+                    label: "Notification",
+                    icon: CupertinoIcons.bell_solid,
+                    isSelected: (selectedIndex == 1),
+                    onTap: handleItemSelected),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: GlowingActionButton(color: AppColors.secondary, icon: CupertinoIcons.add, size: 48, onPressed: () {}),
+                    ),
+
+                _NavigationBarItem(
+                    index: 2,
+                    label: "Calls",
+                    icon: CupertinoIcons.phone_fill,
+                    isSelected: (selectedIndex == 2),
+                    onTap: handleItemSelected),
+                _NavigationBarItem(
+                    index: 3,
+                    label: "Contacts",
+                    icon: CupertinoIcons.person_2_fill,
+                    isSelected: (selectedIndex == 3),
+                    onTap: handleItemSelected),
+              ],
             ),
-            _NavigationBarItem(
-                index: 1,
-                label: "Notification",
-                icon: CupertinoIcons.bell_solid,
-                isSelected: (selectedIndex == 1),
-                onTap: handleItemSelected),
-            _NavigationBarItem(
-                index: 2,
-                label: "Calls",
-                icon: CupertinoIcons.phone_fill,
-                isSelected: (selectedIndex == 2),
-                onTap: handleItemSelected),
-            _NavigationBarItem(
-                index: 3,
-                label: "Contacts",
-                icon: CupertinoIcons.person_2_fill,
-                isSelected: (selectedIndex == 3),
-                onTap: handleItemSelected),
-          ],
-        ));
+          )),
+    );
   }
 }
 
@@ -159,7 +175,7 @@ class _NavigationBarItem extends StatelessWidget {
         onTap(index);
       },
       child: SizedBox(
-        height: 70,
+        width: 70,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,7 +184,7 @@ class _NavigationBarItem extends StatelessWidget {
               icon,
               size: isSelected ? 25 : 20,
               textDirection: isSelected ? TextDirection.rtl : TextDirection.ltr,
-              color: isSelected ? AppColors.secondary : null,
+              color: isSelected ? AppColors.secondary : AppColors.iconDark,
             ),
             const SizedBox(
               height: 3,
